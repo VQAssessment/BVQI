@@ -38,7 +38,7 @@ if __name__ == "__main__":
         val_datasets[name] = getattr(datasets, dataset["type"])(dataset["args"])
 
     print(clip.available_models())
-    model, preprocess = clip.load("ViT-B/32")
+    model, preprocess = clip.load("RN50")
     model = model.to(args.device)
     print("loading succeed")
 
@@ -80,9 +80,8 @@ if __name__ == "__main__":
                     .mean(0)
                     .numpy()[0]
                 )
-
-            results[val_name]["gt"].append(data["gt_label"])
-            gts.append(data["gt_label"])
+            results[val_name]["gt"].append(data["gt_label"][0].item())
+            gts.append(data["gt_label"][0].item())
 
             results[val_name]["sa_index"].append(semantic_affinity_index)
             prs.append(semantic_affinity_index)
