@@ -1,0 +1,19 @@
+num_workers: 8
+
+data:
+    val-maxwell:
+        type: ViewDecompositionDataset
+        args:
+            phase: test
+            anno_file: ../DOVER/examplar_data_labels/MaxWell/labels.txt
+            data_prefix: ../datasets/MaxWell/videos
+            sample_types:
+                original:
+                    size_h: 224
+                    size_w: 224
+                    clip_len: 8
+                    frame_interval: 2
+                    t_frag: 8
+                    num_clips: 1
+                    
+    

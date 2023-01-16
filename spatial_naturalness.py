@@ -19,14 +19,15 @@ from pyiqa.utils.registry import ARCH_REGISTRY
 from scipy.stats import kendalltau as kendallr
 from scipy.stats import pearsonr, spearmanr
 from tqdm import tqdm
+from torch.nn.functional import interpolate
 
 from buona_vista.datasets import ViewDecompositionDataset
-
+from skvideo.measure import niqe
 
 def rescale(x):
     x = np.array(x)
     x = (x - x.mean()) / x.std()
-    return 1 / (1 + np.exp(-x))
+    return 1 / (1 + np.exp(x))
 
 
 if __name__ == "__main__":
@@ -72,9 +73,9 @@ if __name__ == "__main__":
         if "val" not in key and "test" not in key:
             continue
 
-        opt["data"][key]["args"]
+        dopt = opt["data"][key]["args"]
 
-        val_dataset = ViewDecompositionDataset()
+        val_dataset = ViewDecompositionDataset(dopt)
 
         val_loader = torch.utils.data.DataLoader(
             val_dataset, batch_size=1, num_workers=opt["num_workers"], pin_memory=True,
@@ -86,6 +87,8 @@ if __name__ == "__main__":
             target = (
                 data["original"].squeeze(0).transpose(0, 1)
             )  # C, T, H, W to N(T), C, H, W
+            if min(target.shape[2:]) < 224:
+                target = interpolate(target, scale_factor = 224 / min(target.shape[2:]))
             with torch.no_grad():
                 score = net((target.to(device))).mean().item()
 
@@ -93,8 +96,8 @@ if __name__ == "__main__":
                     print(score, target.shape)
                     score = max(pr_labels) + 1
 
-            with open(output_result_csv, "a") as w:
-                w.write(f'{data["name"][0]}, {score}\n')
+            #with open(output_result_csv, "a") as w:
+            #    w.write(f'{data["name"][0]}, {score}\n')
 
             pr_labels.append(score)
             gt_labels.append(data["gt_label"].item())
@@ -104,5 +107,7 @@ if __name__ == "__main__":
         s = spearmanr(gt_labels, pr_labels)[0]
         p = pearsonr(gt_labels, pr_labels)[0]
         k = kendallr(gt_labels, pr_labels)[0]
-
+        with open("spatial_naturalness.pkl", "wb") as f:
+            pkl.dump({"pr_labels": pr_labels,
+                      "gt_labels": gt_labels}, f)
         print(s, p, k)

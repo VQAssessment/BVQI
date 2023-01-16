@@ -8,6 +8,7 @@ import numpy as np
 import torch
 import yaml
 from scipy.stats import pearsonr, spearmanr
+from scipy.stats import kendalltau as kendallr
 from tqdm import tqdm
 
 from buona_vista import datasets
@@ -72,7 +73,7 @@ if __name__ == "__main__":
             probs_a = logits_per_image.cpu().numpy()
 
             semantic_affinity_index = 0
-            for k in [0, 1]:
+            for k in [0,1]:
                 semantic_affinity_index += (
                     torch.from_numpy(probs_a[:, 2 * k : 2 * k + 2])
                     .float()
@@ -97,4 +98,6 @@ if __name__ == "__main__":
             spearmanr(prs, gts)[0],
             "PLCC:",
             pearsonr(prs, gts)[0],
+            "KRCC:",
+            kendallr(prs, gts)[0],
         )
