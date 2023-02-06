@@ -1,0 +1,93 @@
+num_workers: 8
+
+data:
+    val-livevqc:
+        type: ViewDecompositionDataset
+        args:
+            phase: test
+            anno_file: ./examplar_data_labels/LIVE_VQC/labels.txt
+            data_prefix: ../datasets/LIVE_VQC/
+            sample_types:
+                aesthetic:
+                    size_h: 480
+                    size_w: 270
+                    clip_len: -1 # 24
+                    frame_interval: 2
+                    #t_frag: 8
+                    num_clips: 1
+                    
+    val-kv1k:
+        type: ViewDecompositionDataset
+        args:
+            phase: test
+            anno_file: ./examplar_data_labels/KoNViD/labels.txt
+            data_prefix: ../datasets/KoNViD/
+            sample_types:
+                aesthetic:
+                    size_h: 480
+                    size_w: 270
+                    clip_len: -1 # 18
+                    frame_interval: 2
+                    #t_frag: 6
+                    num_clips: 1
+                    
+                    
+    val-cvd2014:
+        type: ViewDecompositionDataset
+        args:
+            phase: test
+            anno_file: ./examplar_data_labels/CVD2014/labels.txt
+            data_prefix: ../datasets/CVD2014/
+            sample_types:
+                aesthetic:
+                    size_h: 480
+                    size_w: 270
+                    clip_len: -1 # 45
+                    frame_interval: 2
+                    #t_frag: 15
+                    num_clips: 1
+                    
+    val-ytugc:
+        type: ViewDecompositionDataset
+        args:
+            phase: test
+            anno_file: ./examplar_data_labels/YouTubeUGC/labels.txt
+            data_prefix: ../datasets/YouTubeUGC/
+            sample_types:
+                aesthetic:
+                    size_h: 480
+                    size_w: 270
+                    clip_len: -1 # 60
+                    frame_interval: 2
+                    #t_frag: 20
+                    num_clips: 1
+                    
+    val-ltest:
+        type: ViewDecompositionDataset
+        args:
+            phase: test
+            anno_file: ./examplar_data_labels/LSVQ/labels_test.txt
+            data_prefix: ../datasets/LSVQ/
+            sample_types:
+                aesthetic:
+                    size_h: 480
+                    size_w: 270
+                    clip_len: -1 # 30
+                    frame_interval: 2
+                    #t_frag: 10
+                    num_clips: 1
+                    
+    val-l1080p:
+        type: ViewDecompositionDataset
+        args:
+            phase: test
+            anno_file: ./examplar_data_labels/LSVQ/labels_1080p.txt
+            data_prefix: ../datasets/LSVQ/
+            sample_types:
+                aesthetic:
+                    size_h: 480
+                    size_w: 270
+                    clip_len: -1 # 8
+                    frame_interval: 2
+                    #t_frag: 8
+                    num_clips: 1
