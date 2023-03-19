@@ -107,7 +107,7 @@ if __name__ == "__main__":
         s = spearmanr(gt_labels, pr_labels)[0]
         p = pearsonr(gt_labels, pr_labels)[0]
         k = kendallr(gt_labels, pr_labels)[0]
-        with open("spatial_naturalness.pkl", "wb") as f:
+        with open(f"spatial_naturalness_{key}.pkl", "wb") as f:
             pkl.dump({"pr_labels": pr_labels,
                       "gt_labels": gt_labels}, f)
         print(s, p, k)

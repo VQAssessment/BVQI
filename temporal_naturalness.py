@@ -13,7 +13,7 @@ from sklearn import decomposition
 
 from buona_vista import datasets
 from V1_extraction.gabor_filter import GaborFilters
-from V1_extraction.utilities import compute_v1_curvature, compute_discrete_v1_curvature
+from V1_extraction.utilities import compute_v1_curvature, compute_discrete_v1_curvature, compute_fragment_v1_curvature
 
 
 def rescale(x):
@@ -29,7 +29,7 @@ if __name__ == "__main__":
         "-o",
         "--opt",
         type=str,
-        default="maxwell-tn.yml",
+        default="buona_vista_tn_index.yml",
         help="the option file",
     )
 
@@ -50,7 +50,7 @@ if __name__ == "__main__":
     column_downsample = 4
 
     pca_d = 5
-    frame_bs = 36
+    frame_bs = 32
 
     gb = GaborFilters(scale,
                       orientations, (kernel_size - 1) // 2,
@@ -86,11 +86,14 @@ if __name__ == "__main__":
             last_start = ((video_frames.shape[0] - 1) // frame_bs) * frame_bs
             v1_features += [gb(video_frames[last_start:])]
             v1_features = torch.cat(v1_features, 0)
+            print(v1_features.shape)
             v1_features = torch.nan_to_num(v1_features)
             v1_features = v1_features.cpu().numpy()
             pca = decomposition.PCA()
+            print(v1_features.shape)
             v1_features = pca.fit_transform(v1_features)
             v1_PCA = v1_features[:, :pca_d]
+            print(v1_PCA.shape)
             v1_score = compute_v1_curvature(v1_PCA)
             temporal_naturalness_index = math.log(np.mean(v1_score))
             #print(temporal_naturalness_index)

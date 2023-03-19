@@ -3,7 +3,7 @@
 import argparse
 import pickle as pkl
 
-import clip
+import open_clip
 import numpy as np
 import torch
 import yaml
@@ -12,6 +12,11 @@ from scipy.stats import kendalltau as kendallr
 from tqdm import tqdm
 
 from buona_vista import datasets
+
+def rescale(x):
+    x = np.array(x)
+    x = (x - x.mean()) / x.std()
+    return 1 / (1 + np.exp(-x))
 
 if __name__ == "__main__":
 
@@ -28,6 +33,10 @@ if __name__ == "__main__":
     parser.add_argument(
         "-d", "--device", type=str, default="cuda", help="the running device"
     )
+    
+    parser.add_argument(
+        "-l", "--local", action="store_true", help="Use BVQI-Local"
+    )
 
     args = parser.parse_args()
 
@@ -38,25 +47,27 @@ if __name__ == "__main__":
     for name, dataset in opt["data"].items():
         val_datasets[name] = getattr(datasets, dataset["type"])(dataset["args"])
 
-    print(clip.available_models())
-    model, preprocess = clip.load("RN50")
+    print(open_clip.list_pretrained())
+    model, _, preprocess = open_clip.create_model_and_transforms("RN50",pretrained="openai")
     model = model.to(args.device)
     print("loading succeed")
 
     texts = [
-        "high quality",
-        "low quality",
+        "a high quality photo",
+        "a low quality photo",
         "a good photo",
         "a bad photo",
     ]
-    text_tokens = clip.tokenize(texts).to(args.device)
+    tokenizer = open_clip.get_tokenizer("RN50")
+    text_tokens = tokenizer(texts).to(args.device)
     print(f"Prompt_loading_succeed, {texts}")
 
     results = {}
-    prs, gts = [], []
+    
 
     for val_name, val_dataset in val_datasets.items():
-        results[val_name] = {"gt": [], "sa_index": []}
+        prs, gts = [], []
+        results[val_name] = {"gt": [], "sa_index": [], "raw_index": []}
         val_loader = torch.utils.data.DataLoader(
             val_dataset, batch_size=1, num_workers=opt["num_workers"], pin_memory=True,
         )
@@ -65,30 +76,37 @@ if __name__ == "__main__":
             image_input = torch.transpose(video_frames, 0, 1).to(args.device)
 
             with torch.no_grad():
-                image_features = model.encode_image(image_input).float()
+                image_features = model.encode_image(image_input).float() #.mean(0)
                 text_features = model.encode_text(text_tokens).float()
-
-                logits_per_image, logits_per_text = model(image_input, text_tokens)
+                logits_per_image = image_features @ text_features.T
+                
+                
+                #logits_per_image = logits_per_image.softmax(dim=-1)
+                #logits_per_image, logits_per_text = model(image_input, text_tokens)
 
             probs_a = logits_per_image.cpu().numpy()
 
             semantic_affinity_index = 0
+            
             for k in [0,1]:
-                semantic_affinity_index += (
-                    torch.from_numpy(probs_a[:, 2 * k : 2 * k + 2])
-                    .float()
-                    .softmax(1)
-                    .mean(0)
-                    .numpy()[0]
-                )
+                pn_pair = torch.from_numpy(probs_a[..., 2 * k : 2 * k + 2]).float().numpy()
+                semantic_affinity_index += pn_pair[...,0] - pn_pair[...,1]
+            if args.local:
+                # Use the local feature after AttnPooling
+                prs.append(semantic_affinity_index[1:].mean())
+            else:
+                # Use the global feature after AttnPooling
+                prs.append(semantic_affinity_index[0].mean())
+                
             results[val_name]["gt"].append(data["gt_label"][0].item())
+            
             gts.append(data["gt_label"][0].item())
-
-            results[val_name]["sa_index"].append(semantic_affinity_index)
-            prs.append(semantic_affinity_index)
-
-            with open("semantic_affinity.pkl", "wb") as f:
-                pkl.dump(results, f)
+            results[val_name]["raw_index"].append(semantic_affinity_index)
+            
+        prs = rescale(prs)
+        with open("semantic_affinity_pubs.pkl", "wb") as f:
+            results[val_name]["sa_index"] = prs
+            pkl.dump(results, f)
         print(
             "Dataset:",
             val_name,

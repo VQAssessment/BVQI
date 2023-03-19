@@ -11,9 +11,9 @@ data:
                 aesthetic:
                     size_h: 480
                     size_w: 270
-                    clip_len: -1 # 24
+                    clip_len: 64 # 24
                     frame_interval: 2
-                    #t_frag: 8
+                    t_frag: 8
                     num_clips: 1
                     
     val-kv1k:
@@ -26,9 +26,9 @@ data:
                 aesthetic:
                     size_h: 480
                     size_w: 270
-                    clip_len: -1 # 18
+                    clip_len: 64 # 18
                     frame_interval: 2
-                    #t_frag: 6
+                    t_frag: 8
                     num_clips: 1
                     
                     
@@ -42,9 +42,9 @@ data:
                 aesthetic:
                     size_h: 480
                     size_w: 270
-                    clip_len: -1 # 45
+                    clip_len: 64 # 45
                     frame_interval: 2
-                    #t_frag: 15
+                    t_frag: 8
                     num_clips: 1
                     
     val-ytugc:
@@ -57,9 +57,9 @@ data:
                 aesthetic:
                     size_h: 480
                     size_w: 270
-                    clip_len: -1 # 60
+                    clip_len: 64 # 60
                     frame_interval: 2
-                    #t_frag: 20
+                    t_frag: 8
                     num_clips: 1
                     
     val-ltest:
@@ -72,9 +72,9 @@ data:
                 aesthetic:
                     size_h: 480
                     size_w: 270
-                    clip_len: -1 # 30
+                    clip_len: 64 # 30
                     frame_interval: 2
-                    #t_frag: 10
+                    t_frag: 8
                     num_clips: 1
                     
     val-l1080p:
@@ -87,7 +87,7 @@ data:
                 aesthetic:
                     size_h: 480
                     size_w: 270
-                    clip_len: -1 # 8
+                    clip_len: 64 # 8
                     frame_interval: 2
-                    #t_frag: 8
+                    t_frag: 8
                     num_clips: 1
