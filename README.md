@@ -2,10 +2,11 @@
 
 
 ![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white)
+![visitors](https://visitor-badge.laobi.icu/badge?page_id=VQAssessment/BVQI)
+[![](https://img.shields.io/github/stars/VQAssessment/BVQI)](https://github.com/VQAssessment/BVQI)
 
 
-
-The Official Repository for BVQI, a robust zero-shot Video Quality Index, and its fine-tuned version. Accepted by ICME2023, extended to TIP (under review).
+The Official Repository for BVQI, a robust zero-shot Video Quality Index, and its efficient fine-tuned version. Accepted by ICME2023, extended to TIP (under review).
 
 
 ## Key Features
@@ -122,6 +123,27 @@ python prompt_tuning.py -i
 ```
 
 *You can also add `-cr` to enable cross-dataset validation during fine-tuning.*
+
+## Citation
+
+The following paper is recommended to be cited in the bibliography if relevant papers are proposed.
+
+```bibtex
+@article{wu2023bvqiplus,
+  title={Towards Robust Text-Prompted Semantic Criterion for In-the-Wild Video Quality Assessment},
+  author={Wu, Haoning and Liao, Liang and Wang, Annan and Chen, Chaofeng and Hou, Jingwen and Sun, Wenxiu and Yan, Qiong and Lin, Weisi},
+  journal={Arxiv Preprint 2304.14672},
+  year={2023}
+}
+
+@article{wu2023bvqi,
+  title={Exploring Opinion-Unaware Video Quality Assessment with Semantic Affinity Criterion},
+  author={Wu, Haoning and Liao, Liang and Hou, Jingwen and Chen, Chaofeng and Zhang, Erli and Wang, Annan  and Sun, Wenxiu and Yan, Qiong and Lin, Weisi},
+  journal={IEEE International Conference on Multimedia and Expo (ICME)},
+  year={2023}
+}
+```
+
 
 
 ## Note: Possible Performance Drop while Totally Using this Codebase
