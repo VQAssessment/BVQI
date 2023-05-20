@@ -1,6 +1,48 @@
 num_workers: 8
 
 data:
+    val-ltest:
+        type: ViewDecompositionDataset
+        args:
+            phase: test
+            anno_file: ./examplar_data_labels/LSVQ/labels_test.txt
+            data_prefix: ../datasets/LSVQ/
+            sample_types:
+                original:
+                    size_h: 224
+                    size_w: 224
+                    clip_len: 8
+                    frame_interval: 2
+                    t_frag: 8
+                    num_clips: 1           
+    val-l1080p:
+        type: ViewDecompositionDataset
+        args:
+            phase: test
+            anno_file: ./examplar_data_labels/LSVQ/labels_1080p.txt
+            data_prefix: ../datasets/LSVQ/
+            sample_types:
+                original:
+                    size_h: 224
+                    size_w: 224
+                    clip_len: 8
+                    frame_interval: 2
+                    t_frag: 8
+                    num_clips: 1
+    val-ytugc:
+        type: ViewDecompositionDataset
+        args:
+            phase: test
+            anno_file: ./examplar_data_labels/YouTubeUGC/labels.txt
+            data_prefix: ../datasets/YouTubeUGC/
+            sample_types:
+                original:
+                    size_h: 224
+                    size_w: 224
+                    clip_len: 20
+                    frame_interval: 2
+                    t_frag: 20
+                    num_clips: 1
     val-kv1k:
         type: ViewDecompositionDataset
         args:
@@ -45,21 +87,7 @@ data:
                     frame_interval: 2
                     t_frag: 15
                     num_clips: 1
-                    
-    val-ytugc:
-        type: ViewDecompositionDataset
-        args:
-            phase: test
-            anno_file: ./examplar_data_labels/YouTubeUGC/labels.txt
-            data_prefix: ../datasets/YouTubeUGC/
-            sample_types:
-                original:
-                    size_h: 224
-                    size_w: 224
-                    clip_len: 20
-                    frame_interval: 2
-                    t_frag: 20
-                    num_clips: 1
+
                     
     val-ltest:
         type: ViewDecompositionDataset

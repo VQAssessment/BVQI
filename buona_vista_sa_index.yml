@@ -1,6 +1,7 @@
 num_workers: 8
 
 data:
+     
     val-livevqc:
         type: ViewDecompositionDataset
         args:
@@ -11,9 +12,9 @@ data:
                 aesthetic:
                     size_h: 224
                     size_w: 224
-                    clip_len: 32
+                    clip_len: 64
                     frame_interval: 2
-                    t_frag: 32
+                    t_frag: 64
                     num_clips: 1
                     
     val-kv1k:
@@ -26,9 +27,9 @@ data:
                 aesthetic:
                     size_h: 224
                     size_w: 224
-                    clip_len: 32
+                    clip_len: 64
                     frame_interval: 2
-                    t_frag: 32
+                    t_frag: 64
                     num_clips: 1
                 
                     
@@ -42,9 +43,9 @@ data:
                 aesthetic:
                     size_h: 224
                     size_w: 224
-                    clip_len: 32
+                    clip_len: 64
                     frame_interval: 2
-                    t_frag: 32
+                    t_frag: 64
                     num_clips: 1
                     
     val-ytugc:
@@ -57,9 +58,9 @@ data:
                 aesthetic:
                     size_h: 224
                     size_w: 224
-                    clip_len: 32
+                    clip_len: 64
                     frame_interval: 2
-                    t_frag: 32
+                    t_frag: 64
                     num_clips: 1
                     
     val-ltest:
@@ -72,9 +73,9 @@ data:
                 aesthetic:
                     size_h: 224
                     size_w: 224
-                    clip_len: 32
+                    clip_len: 64
                     frame_interval: 2
-                    t_frag: 32
+                    t_frag: 64
                     num_clips: 1
                     
     val-l1080p:
@@ -87,7 +88,25 @@ data:
                 aesthetic:
                     size_h: 224
                     size_w: 224
-                    clip_len: 32
+                    clip_len: 64
                     frame_interval: 2
-                    t_frag: 32
+                    t_frag: 64
                     num_clips: 1
+                    
+                    
+                    
+    val-ltrain:
+        type: ViewDecompositionDataset
+        args:
+            phase: test
+            anno_file: ./examplar_data_labels/train_labels.txt
+            data_prefix: ../datasets/LSVQ/
+            sample_types:
+                aesthetic:
+                    size_h: 224
+                    size_w: 224
+                    clip_len: 64
+                    frame_interval: 2
+                    t_frag: 64
+                    num_clips: 1
+                    

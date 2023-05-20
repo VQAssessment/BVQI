@@ -1,14 +1,41 @@
 # BVQI (Zero-shot Blind Video Quality Index)
 
-*Pytorch-accelerated Codebase.* 
-The Official Repository for BUONA-VISTA, a robust zero-shot Video Quality Index. Accepted by ICME2023.
+
+![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white)
 
 
-## ICME2023 Introduction
 
-In this work, we introduce an explicit semantic affinity index for opinion-unaware Video Quality Assessment (a.k.a. Zero-shot VQA) using text-prompts in the contrastive language-image pre-training (CLIP) model. We also aggregate it with different traditional low-level naturalness indexes through gaussian normalization and sigmoid rescaling strategies. Composed of aggregated semantic and technical metrics, the proposed Blind Unified Opinion-Unaware Video Quality Index via Semantic and Technical Metric Aggregation (BUONA-VISTA) outperforms existing opinion-unaware VQA methods significantly by **at least 20% improvements**, and is more robust than opinion-aware approaches. Extensive studies have validated the effectiveness of each part of the proposed BUONA-VISTA quality index.
+The Official Repository for BVQI, a robust zero-shot Video Quality Index, and its fine-tuned version. Accepted by ICME2023, extended to TIP (under review).
+
+
+## Key Features
+
+- Robustly predict quality without training from any MOS scores.
+- Localized semantic quality prediction.
+- Given a small set of MOS-labelled videos, can robustly+efficiently fine-tune on it.
+
+
+May 2023 Updates (in correspondance to TIP-submitted extension):
+- Visualization for SAQI-Local local quality map.
+- Efficient Fine-tuning.
+- Optimization on TPQI (the temporal naturalness index) to improve its speed.
+
+![](figs/bvqiplus.png)
+
+Last Version (in correspondance to ICME conference version):
+- Extract the three quality indexes with Pytorch.
+- Combine and Evaluate.
 
 ![](figs/buona_vista.png)
+
+## Paper Links
+
+ICME2023: [Arxiv](https://arxiv.org/abs/2302.13269)
+
+Extension (*under review for TIP*): [Arxiv](https://arxiv.org/abs/2304.14672)
+
+
+
 
 ## Installation
 
@@ -37,21 +64,26 @@ pip install -e .
 
 ## Usage
 
-Extract Semantic Affinity Index:
+### *zero-shot* inference
+
+Extract Semantic Affinity Quality Index (SAQI):
 
 ```
 python semantic_affinity.py
 ```
 
-If you would like to use the local semantic affinity index, please add `-l` after the command.
+New!  If you would like to use the local semantic affinity quality index, please add `-l` after the command, i.e.,
+
+```
+python semantic_affinity.py -l
+```
+
 The results will be **improved** as follows:
 
 |       | KoNViD-1k | CVD2014 | LIVE-VQC | YouTube-UGC (SA-index-only) |
 | ----  |    ----   |   ---- |  ----   |   ---- |
-| SROCC | 0.772 (0.760 for global, +1.6%) | 0.746 (0.740 for global, +0.8%) | 0.794 (0.784 for global, +1.4%) | 0.603 (0.585 for global, +3.0%)|
-| PLCC  | 0.772 (0.760 for global, +1.6%) | 0.768 (0.763 for global, +0.7%) | 0.803 (0.794 for global, +1.1%) | 0.612 (0.606 for global, +1.0%)|
-
-In the next version, we will add the visualization tool to visualize the **local quality maps** from perspective of all three indices.
+| SROCC | 0.772 (0.760 for global, +1.6%) | 0.746 (0.740 for global, +0.8%) | 0.794 (0.784 for global, +1.4%) | 0.610 (0.585 for global, +3.8%)|
+| PLCC  | 0.772 (0.760 for global, +1.6%) | 0.768 (0.763 for global, +0.7%) | 0.803 (0.794 for global, +1.1%) | 0.616 (0.606 for global, +1.4%)|
 
 Extract Spatial Naturalness Index:
 
@@ -70,10 +102,31 @@ Evaluate the Aggregated Results
 
 See *combine.ipynb*
 
+### New: *visualize* local quality maps by SAQI-Local
+
+See **Visualization.ipynb** for details.
+
+### New: **fine-tine** with a given set of videos
+
+
+Fine-tuning without Implicit Prompt:
+
+```
+python prompt_tuning.py
+```
+
+Fine-tuning with Implicit Prompt:
+
+```
+python prompt_tuning.py -i
+```
+
+*You can also add `-cr` to enable cross-dataset validation during fine-tuning.*
+
 
 ## Note: Possible Performance Drop while Totally Using this Codebase
 
-The Code for Temporal Naturalness Index is slightly different from the original version (with only V1 curvature), therefore we might experience some performance drop. We will try to include the code for LGN curvature computation in the following versions. **Still, we provided the `naturalnesses_matlab_results.pkl` to assist you reproduce our results with MatLab-obtained SN and TN indexes.**
+The Code for Temporal Naturalness Index is slightly different from the original version (with only V1 curvature), therefore we might experience some performance drop. We will try to include the code for LGN curvature computation in the following versions. **To solve this, we provided the `naturalnesses_matlab_results.pkl` to assist you reproduce our results with MatLab-obtained SN and TN indexes.**
 
 Here shows performance of the Codebase (Performance of Original Paper with MatLab Code):
 
